@@ -1,4 +1,4 @@
-require 'mixlib/shellout'
+require '../mixlib/shellout'
 
 def print_usage(args)
 	puts "Usage:\n\t#{$0} query :: <command> | <run_iterations> [remove_iterations]\n"
@@ -11,17 +11,21 @@ def test_command(args)
   	end
   	
   	run_iterations = 1
+  	remove_iterations = 0
 	@times = []
 	run_iterations = args[1].to_i if args[1]
-
-	print_results(timing_test(args[0],run_iterations,args[2]))
+	remove_iterations = args[2].to_i if args[2]
+	print_results(timing_test(args[0],run_iterations,remove_iterations))
 end
 
-def timing_test(args,iterations,remove_iterations)
+def timing_test(tested_command,iterations,remove_iterations)
 	iterations.times do
 		start = Time.now 
-		command = Mixlib::ShellOut.new(args[0])
-		command.run_command
+		command = Mixlib::ShellOut.new(tested_command)
+		if command.run_command.exitstatus != 0
+			puts "this broke"
+			break
+		end
 		finish = Time.now
 		@times << (finish - start)
 	end
