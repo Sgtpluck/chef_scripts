@@ -19,10 +19,11 @@ def test_command(args)
 end
 
 def timing_test(tested_command,iterations,remove_iterations)
+	command = Mixlib::ShellOut.new(tested_command)
+	return nil if command.run_command.exitstatus != 0 
 	iterations.times do
 		start = Time.now 
-		command = Mixlib::ShellOut.new(tested_command)
-		break if command.run_command.exitstatus != 0
+		command.run_command
 		finish = Time.now
 		@times << (finish - start)
 	end
