@@ -30,7 +30,7 @@ def timing_test(tested_command,iterations,remove_iterations)
 end
 
 def print_results(times)
-	if times.empty?
+	if times.nil?
 		puts "Sorry, this command is not working."
 	elsif times.count > 1
 		times.each {|time| puts "#{time} seconds" }
