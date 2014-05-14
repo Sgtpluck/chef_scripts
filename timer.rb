@@ -22,7 +22,7 @@ def timing_test(tested_command,iterations,remove_iterations)
 	iterations.times do
 		start = Time.now 
 		command = Mixlib::ShellOut.new(tested_command)
-		puts command.run_command.exitstatus
+		break if command.run_command.exitstatus != 0
 		finish = Time.now
 		@times << (finish - start)
 	end
@@ -30,7 +30,9 @@ def timing_test(tested_command,iterations,remove_iterations)
 end
 
 def print_results(times)
-	if times.count > 1
+	if times.empty?
+		puts "Sorry, this command is not working."
+	elsif times.count > 1
 		times.each {|time| puts "#{time} seconds" }
 		puts "Average runtime is #{average(times).round(4)} seconds"
 		puts "Slowest runtime is #{times.max} seconds"
